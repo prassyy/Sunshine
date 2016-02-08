@@ -71,6 +71,10 @@ public class ForecastFragment extends Fragment {
             new FetchWeatherTask().execute("Chennai,IN");
             return true;
         }
+        if (id == R.id.action_settings) {
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
     }
 
