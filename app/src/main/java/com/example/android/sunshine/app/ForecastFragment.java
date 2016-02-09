@@ -1,9 +1,11 @@
 package com.example.android.sunshine.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.text.format.Time;
 import android.util.Log;
@@ -68,7 +70,11 @@ public class ForecastFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            new FetchWeatherTask().execute("Chennai,IN");
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String locationKey = getString(R.string.pref_key_location);
+            String defaultLocation = getString(R.string.pref_default_location);
+
+            new FetchWeatherTask().execute(sharedPref.getString(locationKey,defaultLocation));
             return true;
         }
         if (id == R.id.action_settings) {
@@ -101,7 +107,7 @@ public class ForecastFragment extends Fragment {
                 String forecastText = adapterView.getAdapter().getItem(i).toString();
 //                Toast.makeText(getActivity(),adapterView.getAdapter().getItem(i).toString(),Toast.LENGTH_LONG).show();
                 Intent detailActivityIntent = new Intent(getActivity(), DetailActivity.class)
-                        .putExtra(Intent.EXTRA_TEXT,forecastText);
+                        .putExtra(Intent.EXTRA_TEXT, forecastText);
                 startActivity(detailActivityIntent);
             }
         });
@@ -113,7 +119,11 @@ public class ForecastFragment extends Fragment {
         weekForecast.add("Fri - Foggy - 70/46");
         weekForecast.add("Sat - Sunny - 76/68");
         */
-        new FetchWeatherTask().execute("Chennai,IN");
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String locationKey = getString(R.string.pref_key_location);
+        String defaultLocation = getString(R.string.pref_default_location);
+
+        new FetchWeatherTask().execute(sharedPref.getString(locationKey,defaultLocation));
 
         return rootView;
     }
