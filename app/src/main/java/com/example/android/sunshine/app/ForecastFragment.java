@@ -39,6 +39,7 @@ import java.util.ArrayList;
 public class ForecastFragment extends Fragment {
 
     ArrayAdapter<String> forecastListArrayAdapter;
+    String LOG_TAG = ForecastFragment.class.getSimpleName();
 
     public ForecastFragment() {
     }
@@ -77,6 +78,10 @@ public class ForecastFragment extends Fragment {
         if (id == R.id.action_settings) {
             return true;
         }
+        if (id == R.id.action_map) {
+            showLocationInMap();
+            return true;
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -113,20 +118,12 @@ public class ForecastFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 String forecastText = adapterView.getAdapter().getItem(i).toString();
-//                Toast.makeText(getActivity(),adapterView.getAdapter().getItem(i).toString(),Toast.LENGTH_LONG).show();
                 Intent detailActivityIntent = new Intent(getActivity(), DetailActivity.class)
                         .putExtra(Intent.EXTRA_TEXT, forecastText);
                 startActivity(detailActivityIntent);
             }
         });
-        /*
-        weekForecast.add("Today - Sunny - 88/63");
-        weekForecast.add("Tomorrow - Foggy - 70/46");
-        weekForecast.add("Weds - Cloudy - 72/63");
-        weekForecast.add("Thurs - Rainy - 64/51");
-        weekForecast.add("Fri - Foggy - 70/46");
-        weekForecast.add("Sat - Sunny - 76/68");
-        */
+
         updateWeather();
 
         return rootView;
@@ -137,9 +134,23 @@ public class ForecastFragment extends Fragment {
         String locationKey = getString(R.string.pref_key_location);
         String defaultLocation = getString(R.string.pref_default_location);
 
-        new FetchWeatherTask().execute(sharedPref.getString(locationKey,defaultLocation));
+        new FetchWeatherTask().execute(sharedPref.getString(locationKey, defaultLocation));
     }
 
+    private void showLocationInMap() {
+        SharedPreferences sharedpref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String location = sharedpref.getString(getString(R.string.pref_key_location), getString(R.string.pref_default_location));
+        Uri uri = Uri.parse("geo:0,0?").buildUpon().appendQueryParameter("q",location).build();
+
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(uri);
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+            startActivity(intent);
+        }
+        else {
+            Log.e(LOG_TAG,"Couldn't find resolving Activity to launch intent..");
+        }
+    }
 
     public class FetchWeatherTask extends AsyncTask<String, Void, String[]> {
 
@@ -265,7 +276,7 @@ public class ForecastFragment extends Fragment {
                 high = (high*1.8)+32;
                 low = (low*1.8)+32;
             }
-            else if(!unitSystem.equals(getString(R.string.pref_unit_imperial))) {
+            else if(!unitSystem.equals(getString(R.string.pref_unit_metric))) {
                 Log.e(LOG_TAG,"Temperature Unit not Found"+unitSystem);
             }
 

@@ -6,7 +6,7 @@
         android:title="@string/pref_title_location"
         android:defaultValue= "@string/pref_default_location"
         android:inputType="text"
-        android:key="location"
+        android:key="@string/pref_key_location"
         android:selectAllOnFocus="true"
         android:singleLine="true" />
     <ListPreference
@@ -16,5 +16,4 @@
         android:entries="@array/unitEntry"
         android:entryValues="@array/unitValues"
         android:defaultValue="@string/pref_unit_metric"/>
-
 </PreferenceScreen>

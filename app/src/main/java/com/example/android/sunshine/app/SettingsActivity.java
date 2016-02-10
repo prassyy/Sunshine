@@ -1,5 +1,5 @@
 package com.example.android.sunshine.app;
- 
+
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -28,7 +28,7 @@ public class SettingsActivity extends PreferenceActivity
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_location)));
         bindPreferenceSummaryToValue(findPreference(getString(R.string.pref_key_unit)));
     }
- 
+
     /**
      * Attaches a listener so the summary is always updated with the preference value.
      * Also fires the listener once, to initialize the summary (so it shows up before the value
@@ -64,5 +64,6 @@ public class SettingsActivity extends PreferenceActivity
         }
         return true;
     }
+
  
 }
