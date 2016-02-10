@@ -1,5 +1,6 @@
 package com.example.android.sunshine.app;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -70,11 +71,7 @@ public class ForecastFragment extends Fragment {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_refresh) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            String locationKey = getString(R.string.pref_key_location);
-            String defaultLocation = getString(R.string.pref_default_location);
-
-            new FetchWeatherTask().execute(sharedPref.getString(locationKey,defaultLocation));
+            updateWeather();
             return true;
         }
         if (id == R.id.action_settings) {
@@ -88,6 +85,17 @@ public class ForecastFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.forecastfragment,menu);
+    }
+
+    /**
+     * Called when the Fragment is visible to the user.  This is generally
+     * tied to {@link Activity#onStart() Activity.onStart} of the containing
+     * Activity's lifecycle.
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
     }
 
     @Override
@@ -119,13 +127,17 @@ public class ForecastFragment extends Fragment {
         weekForecast.add("Fri - Foggy - 70/46");
         weekForecast.add("Sat - Sunny - 76/68");
         */
+        updateWeather();
+
+        return rootView;
+    }
+
+    private void updateWeather() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String locationKey = getString(R.string.pref_key_location);
         String defaultLocation = getString(R.string.pref_default_location);
 
         new FetchWeatherTask().execute(sharedPref.getString(locationKey,defaultLocation));
-
-        return rootView;
     }
 
 
@@ -244,6 +256,19 @@ public class ForecastFragment extends Fragment {
          */
         private String formatHighLows(double high, double low) {
             // For presentation, assume the user doesn't care about tenths of a degree.
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            String unitKey = getString(R.string.pref_key_unit);
+            String defaultUnit = getString(R.string.pref_unit_metric);
+
+            String unitSystem = sharedPref.getString(unitKey, defaultUnit);
+            if(unitSystem.equals(getString(R.string.pref_unit_imperial))) {
+                high = (high*1.8)+32;
+                low = (low*1.8)+32;
+            }
+            else if(!unitSystem.equals(getString(R.string.pref_unit_imperial))) {
+                Log.e(LOG_TAG,"Temperature Unit not Found"+unitSystem);
+            }
+
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
 
