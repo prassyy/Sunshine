@@ -178,7 +178,7 @@ public class ForecastFragment extends Fragment {
             String format = "json";
             String unit = "metric";
             Integer days = 7;
-            String apiId = "[API KEY]";  //Please replace this string with the API Key linked to your Open Weather account
+            String apiId = "XXXXXXXX";  //Please replace this string with the API Key linked to your Open Weather account
 
             try {
                 final String FORECAST_BASE_URL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
