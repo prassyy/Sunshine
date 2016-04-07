@@ -35,9 +35,9 @@ public class TestFetchWeatherTask extends AndroidTestCase{
     @TargetApi(11)
     public void testAddLocation() {
         // start from a clean state
-//        getContext().getContentResolver().delete(WeatherContract.LocationEntry.CONTENT_URI,
-//                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?",
-//                new String[]{ADD_LOCATION_SETTING});
+        getContext().getContentResolver().delete(WeatherContract.LocationEntry.CONTENT_URI,
+                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?",
+                new String[]{ADD_LOCATION_SETTING});
 
         FetchWeatherTask fwt = new FetchWeatherTask(getContext());
         long locationId = fwt.addLocation(ADD_LOCATION_SETTING, ADD_LOCATION_CITY,
